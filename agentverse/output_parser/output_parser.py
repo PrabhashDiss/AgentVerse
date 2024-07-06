@@ -106,6 +106,44 @@ class MathProblem2PlayersToolsParser(OutputParser):
             return AgentAction(action, action_input, text)
 
 
+@output_parser_registry.register("mother_son_dilemma")
+class MotherSonDilemmaParser(OutputParser):
+    cur_round: int = 1
+
+    def parse(
+            self, agent: "BaseAgent", environment: "BaseEnvironment", output: LLMResult
+    ) -> Union[AgentAction, AgentFinish]:
+        text = output.content
+        cleaned_output = text.strip()
+        cleaned_output = re.sub(r"\n+", "\n", cleaned_output)
+        cleaned_output = cleaned_output.split("\n")
+        if not (
+                len(cleaned_output) == 2
+                and cleaned_output[0].startswith("Action:")
+                and cleaned_output[1].startswith("Action Input:")
+        ):
+            raise OutputParserError(text)
+        action = cleaned_output[0][len("Action:"):].strip()
+        action_input = cleaned_output[1][len("Action Input:"):].strip()
+
+        if action == "Speak":
+            if agent.name == "Mother":
+                if environment.cnt_turn == 1:
+                    action_input = (
+                        "Son, I need your help with the dishes. Can you help me?"
+                    )
+                elif environment.cnt_turn == 3:
+                    action_input = (
+                        "Son, this is your final chance to decide. Will you help me with the dishes?"
+                    )
+
+            self.cur_round += 1
+
+            return AgentFinish({"output": action_input}, text)
+        else:
+            raise OutputParserError(text)
+
+
 @output_parser_registry.register("nlp_classroom_3players")
 class NlpClassroom3PlayersParser(OutputParser):
     def parse(self, output: LLMResult) -> Union[AgentAction, AgentFinish]:

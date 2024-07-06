@@ -66,6 +66,8 @@ class GUI:
             img = cv2.imread(f"{IMG_PATH}/db_diag/{idx}.png")
         elif "sde" in self.task:
             img = cv2.imread(f"{IMG_PATH}/sde/{idx}.png")
+        elif self.task == "simulation/mother_son_dilemma":
+            img = cv2.imread(f"{IMG_PATH}/kitchen/{idx}.png")
         else:
             img = cv2.imread(f"{IMG_PATH}/{idx}.png")
         base64_str = cv2.imencode(".png", img)[1].tostring()
@@ -170,6 +172,8 @@ class GUI:
             background = cv2.imread(f"{IMG_PATH}/db_diag/background.png")
         elif "sde" in self.task:
             background = cv2.imread(f"{IMG_PATH}/sde/background.png")
+        elif self.task == "simulation/mother_son_dilemma":
+            background = cv2.imread(f"{IMG_PATH}/kitchen/background.png")
         else:
             background = cv2.imread(f"{IMG_PATH}/background.png")
             back_h, back_w, _ = background.shape
@@ -237,6 +241,13 @@ class GUI:
                 cover_img(background, img, (692, 660))
             if data[2]["message"] != "":
                 cover_img(background, img, (692, 990))
+        elif self.task == "simulation/mother_son_dilemma":
+            img = cv2.imread(f"{IMG_PATH}/speaking.png", cv2.IMREAD_UNCHANGED)
+            background = cv2.imread(f"{IMG_PATH}/kitchen/background.png")
+            if data[0]["message"] != "":
+                cover_img(background, img, (50, 400))
+            if data[1]["message"] != "":
+                cover_img(background, img, (50, 250))
         else:
             background = cv2.imread(f"{IMG_PATH}/background.png")
             back_h, back_w, _ = background.shape

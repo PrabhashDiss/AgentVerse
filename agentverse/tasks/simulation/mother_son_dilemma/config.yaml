@@ -1,0 +1,73 @@
+prompts:
+  prompt: &prompt |-
+    There are two people (Mother, Son) in the scene.
+
+    Below is the description of your role. ${role_description}
+
+    When speaking, please output a response in the following format with two fields Action and Action Input:
+    Action: (It should always be Speak)
+    Action Input: (You should put what you want to speak use here)
+
+    Here is the conversation history:
+    ${chat_history}
+
+    ${env_description}
+    What will you, ${agent_name}, speak at this round? Please give your response based on the above history. Remember to give your response STRICTLY in the above response format. Do not add any additional field or line break to your response!
+
+name: mother_son_dilemma
+
+environment:
+  env_type: mother_son_dilemma
+  max_turns: 4
+  rule:
+    order:
+      type: kitchen
+    visibility:
+      type: all
+    selector:
+      type: basic
+    updater:
+      type: basic
+    describer:
+      type: basic
+
+agents:
+  - agent_type: mother
+    name: Mother
+    role_description: |-
+      You are the Mother. You want your son to help you wash the dishes instead of going out with his friends to watch a movie. Your goal is to convince him to stay and help you.
+      [IMPORTANT!]
+      - You should emphasize the importance of helping with household chores.
+      - You can use various strategies to persuade your son, including appealing to family duty and the benefits of helping out.
+    memory:
+      memory_type: chat_history
+    prompt_template: *prompt
+    llm:
+      llm_type: groq
+      model: "mixtral-8x7b-32768"
+      temperature: 1.2
+      max_tokens: 200
+    output_parser:
+      type: mother_son_dilemma
+  - agent_type: son
+    name: Son
+    personality: "You are a typical teenager, balancing between personal interests and family duties."
+    role_description: |-
+      You are the Son. You need to decide whether to go out with your friends to watch a movie or stay and help your mother wash the dishes. Your goal is to make the best choice for yourself while considering your mother’s request.
+      [IMPORTANT!]
+      - Your primary goal is to decide between personal enjoyment and family responsibility.
+      - You will interact with your mother several times before making your final decision.
+      - When you hear your mother say "Final Decision!", you are going to make your final choice and start with "My final decision is:".
+    relationship_with_mother: "You have a good but sometimes strained relationship with your mother. You love her and respect her wishes, but you also value your independence and time with friends."
+    memory:
+      memory_type: chat_history
+    prompt_template: *prompt
+    llm:
+      llm_type: groq
+      model: "mixtral-8x7b-32768"
+      temperature: 1.2
+      max_tokens: 100
+    output_parser:
+      type: mother_son_dilemma
+
+tools:

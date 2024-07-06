@@ -6,6 +6,7 @@ agent_registry = Registry(name="AgentRegistry")
 
 from .base import BaseAgent
 from agentverse.agents.simulation_agent.conversation import ConversationAgent
+from agentverse.agents.simulation_agent.mother_son_dilemma import MotherAgent, SonAgent
 from agentverse.agents.simulation_agent.tool import ToolAgent
 from agentverse.agents.simulation_agent.reflection import ReflectionAgent
 from agentverse.agents.simulation_agent.prisoner_dilemma import (

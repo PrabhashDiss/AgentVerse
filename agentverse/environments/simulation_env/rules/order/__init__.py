@@ -5,6 +5,7 @@ from .base import BaseOrder
 from .sequential import SequentialOrder
 from .random import RandomOrder
 from .concurrent import ConcurrentOrder
+from .kitchen import KitchenOrder
 from .classroom import ClassroomOrder
 from .prisoner import PrisonerOrder
 from .sde_team import SdeTeamOrder
